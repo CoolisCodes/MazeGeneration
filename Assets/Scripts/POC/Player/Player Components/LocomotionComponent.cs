@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 public class LocomotionComponent : PlayerComponent
 {
     public InputActionReference moveActionReference;
+
+    //TODO:Take this reference and make the player Look Around
     public InputActionReference lookActionReference;
     public CharacterController characterController;
 
