@@ -548,11 +548,18 @@ MonoBehaviour:
   player: {fileID: 0}
   moveActionReference: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   lookActionReference: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  sprintReference: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   characterController: {fileID: 0}
   controllerInput: 0
   moving: 0
   vec: {x: 0, y: 0}
-  speed: 3
+  lookVec: {x: 0, y: 0}
+  sprinting: 0
+  playerSpeed: 3
+  sprintSpeed: 10
+  normalSpeed: 3
+  playerCamera: {fileID: 1927481787}
+  sensitivity: 100
 --- !u!1 &1927481784
 GameObject:
   m_ObjectHideFlags: 0
