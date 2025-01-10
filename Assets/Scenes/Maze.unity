@@ -253,7 +253,7 @@ GameObject:
   - component: {fileID: 1675146294}
   - component: {fileID: 1675146293}
   - component: {fileID: 1675146297}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -549,17 +549,27 @@ MonoBehaviour:
   moveActionReference: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   lookActionReference: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   sprintReference: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  characterController: {fileID: 0}
+  jumpReference: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  characterController: {fileID: 1867533006}
   controllerInput: 0
   moving: 0
+  isGrounded: 0
   vec: {x: 0, y: 0}
   lookVec: {x: 0, y: 0}
+  velocity: {x: 0, y: 0, z: 0}
   sprinting: 0
   playerSpeed: 3
   sprintSpeed: 10
   normalSpeed: 3
+  jumpHeight: 3.55
+  gravity: -9.81
   playerCamera: {fileID: 1927481787}
   sensitivity: 100
+  groundCheck: {fileID: 1675146296}
+  groundDistance: 0.4
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &1927481784
 GameObject:
   m_ObjectHideFlags: 0
