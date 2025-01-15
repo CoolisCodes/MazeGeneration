@@ -153,14 +153,14 @@ public class LocomotionComponent : PlayerComponent
 
     void Jump(InputAction.CallbackContext context)
     {
-        
-        
+        velocity.y += gravity * Time.deltaTime;
+
         if (context.performed && isGrounded && velocity.y < 0)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
         velocity.y = -2f;
-        velocity.y += gravity * Time.deltaTime;
+        
     }
 
 
