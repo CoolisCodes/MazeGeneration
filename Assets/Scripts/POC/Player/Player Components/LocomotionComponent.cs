@@ -14,23 +14,16 @@ public class LocomotionComponent : PlayerComponent
     public CharacterController characterController;
 
     public bool controllerInput = false;
-
     public bool moving = false;
-
     public bool isGrounded;
 
     public Vector2 vec;
     public Vector2 lookVec;
-    public Vector3 velocity;
     public bool sprinting;
-
-
 
     public float playerSpeed = 3;
     public float sprintSpeed = 10;
     public float normalSpeed = 3;
-    public float jumpHeight = 2f;
-    public float gravity = -9.81f;
 
     [SerializeField] private Transform playerCamera; // Reference to the camera
     [SerializeField] private float sensitivity = 100f; // Mouse sensitivity
@@ -40,6 +33,9 @@ public class LocomotionComponent : PlayerComponent
     public float groundDistance = 0.4f; // Radius of the ground check sphere
     public LayerMask groundMask; // Layer to identify what counts as "ground"
 
+    private Vector3 velocity; // Stores the vertical velocity
+    [SerializeField] private float gravity = -9.81f; // Gravity value
+    [SerializeField] private float jumpHeight = 2f; // Jump height
 
     public override void EnableComponent(Player player)
     {
@@ -61,16 +57,12 @@ public class LocomotionComponent : PlayerComponent
         }
 
         moveActionReference.action.canceled += Stopped;
-
         lookActionReference.action.performed += Look;
-
         sprintReference.action.started += Sprint;
         sprintReference.action.canceled += Sprint;
-
-        jumpReference.action.performed += Jump;
-        jumpReference.action.canceled += Jump;
-
+        jumpReference.action.started += Jump;
     }
+
     public override void DisableComponent()
     {
         base.DisableComponent();
@@ -87,14 +79,13 @@ public class LocomotionComponent : PlayerComponent
         }
 
         moveActionReference.action.canceled -= Stopped;
-
         lookActionReference.action.performed -= Look;
 
         sprintReference.action.started -= Sprint;
         sprintReference.action.canceled -= Sprint;
-        jumpReference.action.performed -= Jump;
-        jumpReference.action.canceled -= Jump;
+        jumpReference.action.started -= Jump;
     }
+
     void PlayerMoveController(InputAction.CallbackContext context)
     {
         moving = true;
@@ -102,6 +93,7 @@ public class LocomotionComponent : PlayerComponent
 
         characterController.Move(new Vector3(moveVec.x, 0, moveVec.y));
     }
+
     void PlayerMoveKeyboard(InputAction.CallbackContext context)
     {
         moving = true;
@@ -109,6 +101,7 @@ public class LocomotionComponent : PlayerComponent
 
         vec = moveVec;
     }
+
     void Stopped(InputAction.CallbackContext context)
     {
         moving = false;
@@ -122,14 +115,11 @@ public class LocomotionComponent : PlayerComponent
         {
             sprinting = true;
             playerSpeed = sprintSpeed;
-
         }
         else
         {
             sprinting = false;
-
             playerSpeed = normalSpeed;
-
         }
     }
 
@@ -140,36 +130,19 @@ public class LocomotionComponent : PlayerComponent
         float mouseX = lookVec.x * sensitivity * Time.deltaTime;
         float mouseY = lookVec.y * sensitivity * Time.deltaTime;
 
-        // Adjust pitch (vertical rotation) and clamp it
         pitch -= mouseY;
         pitch = Mathf.Clamp(pitch, -90f, 90f);
 
-        // Apply pitch to the camera
         playerCamera.localRotation = Quaternion.Euler(pitch, 0f, 0f);
 
-        // Rotate the player capsule for yaw (horizontal rotation)
         transform.Rotate(Vector3.up * mouseX);
     }
 
     void Jump(InputAction.CallbackContext context)
     {
-        velocity.y += gravity * Time.deltaTime;
-
-        if (context.performed && isGrounded && velocity.y < 0)
+        if (isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-        }
-        velocity.y = -2f;
-        
-    }
-
-
-    void GroundCheck()
-    {
-        characterController = GetComponent<CharacterController>();
-        if (groundCheck == null)
-        {
-            Debug.LogWarning("GroundCheck transform is not assigned. Please set it in the Inspector.");
         }
     }
 
@@ -177,13 +150,21 @@ public class LocomotionComponent : PlayerComponent
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f; // Ensure the character stays grounded
+        }
+
         if (!controllerInput && moving)
         {
             Vector3 move = transform.right * vec.x + transform.forward * vec.y;
             characterController.Move(move * playerSpeed * Time.deltaTime);
-            //characterController.Move(new Vector3(vec.x, 0, vec.y) * speed * Time.deltaTime);
-            
         }
-        
+
+        // Apply gravity
+        velocity.y += gravity * Time.deltaTime;
+
+        // Move the character vertically
+        characterController.Move(velocity * Time.deltaTime);
     }
 }
