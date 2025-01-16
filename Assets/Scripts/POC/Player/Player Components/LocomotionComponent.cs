@@ -32,6 +32,7 @@ public class LocomotionComponent : PlayerComponent
     public Transform groundCheck; // Reference to a ground check object
     public float groundDistance = 0.4f; // Radius of the ground check sphere
     public LayerMask groundMask; // Layer to identify what counts as "ground"
+    
 
     private Vector3 velocity; // Stores the vertical velocity
     [SerializeField] private float gravity = -9.81f; // Gravity value
